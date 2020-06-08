@@ -1,4 +1,6 @@
 import axios from 'axios';
+import FileDownload from 'js-file-download';
+import RNFetchBlob from 'rn-fetch-blob'
 
 import React from 'react';
 import {
@@ -48,18 +50,54 @@ export default class Pdf extends React.Component {
         this.setState({ modalVisible: false });
     }
 
+    componentDidMount() {
+        console.log(this.state.caseNo);
+    }
+
     createPDF() {
         var self = this;
-        var caseNo = this.state.temporaryId;
-        axios.post(this.state.ip + '/api/pdf', { id: caseNo })
-            .then(function (response) {
-                self.setState({ modalVisible: false });
-                alert("Converting report to PDF.");
-                self.refreshSc();
-            })
-            .catch(function (error) {
-                console.log(error);
-            })
+        var caseNo = this.state.caseNo;
+        var caseName = this.state.caseName;
+        console.log(this.state.ip);
+        let dirs = RNFetchBlob.fs.dirs
+        console.log(dirs.DownloadDir);
+        axios.post(this.state.ip + '/api/pdf', {
+            caseNo: caseNo,
+        }).then(function (response) {
+            console.log(response);
+            RNFetchBlob.fs.createFile(dirs.DownloadDir +'/'+ caseNo + ' - ' + caseName + '.pdf', response.data, 'base64');
+        }).catch(function (error) {
+            console.log(error.response);
+        });
+        // axios.post(this.state.ip + '/api/pdf', { caseNo: caseNo })
+        //     .then(function (response) {
+        //         self.setState({ modalVisible: false });
+        //         alert("Converting report to PDF.");
+        //         FileDownload(response,"anything.pdf");
+        //         console.log(response);
+        //         //self.refreshSc();
+        //     })
+        //     .catch(function (error) {
+        //         console.log(error.response);
+        //     })
+        // console.log("Button Push");
+        // let dirs = RNFetchBlob.fs.dirs;
+        // RNFetchBlob
+        //     .config({
+        //         // response data will be saved to this path if it has access right.
+        //         path: dirs.DocumentDir + '/anything.pdf'
+        //     })
+        //     .fetch('POST', this.state.ip + '/api/pdf', {
+        //         caseNo: caseNo
+        //         //some headers ..
+        //     })
+        //     .then((res) => {
+        //         // the path should be dirs.DocumentDir + 'path-to-file.anything'
+        //         console.log('The file saved to ', res.path())
+        //     })
+        //     .catch(function (error) {
+        //         console.log(error.response);
+        //     })
     }
     render() {
         return (
@@ -86,7 +124,7 @@ export default class Pdf extends React.Component {
                         </View>
                     </Modal>
                     <View style={styles.container}>
-                    <Text style={{color: "darkred"}}>{this.state.ip}</Text>
+                        <Text style={{ color: "darkred" }}>{this.state.ip}</Text>
                         <View style={{ marginBottom: 10, flexDirection: "row", width: "80%", alignItems: "center" }}>
                             <Text style={styles.text}>Case No : </Text>
                             <Text style={styles.textt}>{this.state.caseNo}</Text>
@@ -136,7 +174,7 @@ export default class Pdf extends React.Component {
                             <Text style={styles.textt}>{this.state.involveD}</Text>
                         </View>
 
-                        
+
                         <TouchableOpacity style={styles.button} onPress={() => this.conform()}>
                             <Text style={{ color: "white" }}>Create PDF</Text>
                         </TouchableOpacity>

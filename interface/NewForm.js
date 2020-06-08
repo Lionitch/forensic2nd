@@ -126,7 +126,8 @@ export default class NewForm extends React.Component {
             time: this.state.time,
             latitude: this.state.latitude,
             longitude: this.state.longitude,
-            address: this.state.address,
+            //address: this.state.address,
+            address: "sungai",
             scene: this.state.scene,
             weather: this.state.weather,
             victim: this.state.victim,
@@ -153,7 +154,7 @@ export default class NewForm extends React.Component {
                 }
             })
             .catch(function (error) {
-                console.log(error);
+                console.log(error.response);
             });
     }
 
