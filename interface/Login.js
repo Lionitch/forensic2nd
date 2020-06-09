@@ -23,6 +23,7 @@ export default class Login extends React.Component {
   state = {
     id: "",
     password: "",
+    name: "",
     ip:"http://192.168.0.197:8000"
   }
   checkInput(){
@@ -40,11 +41,12 @@ export default class Login extends React.Component {
     var self = this;
     axios.post(this.state.ip+'/api/login', {
       id: this.state.id,
-      password: this.state.password
+      password: this.state.password,
+      name: this.state.name,
     })
     .then(function (response) {
      if (response.data=="Investigator"){
-       self.props.navigation.navigate("Investigator",{ip:self.state.ip})
+       self.props.navigation.navigate("Investigator",{ip:self.state.ip, id:self.state.id, name: self.state.name,})
      }
      else if (response.data=="Verifier"){
        self.props.navigation.navigate("Verifier",{ip:self.state.ip})

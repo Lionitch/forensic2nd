@@ -39,6 +39,8 @@ export default class Pdf extends React.Component {
         involveB: this.props.route.params.involveB,
         involveC: this.props.route.params.involveC,
         involveD: this.props.route.params.involveD,
+        id: this.props.route.params.id,
+        name: this.props.route.params.name,
         modalVisible: false,
         // ip: "http://192.168.0.197:8000"
     }
@@ -54,6 +56,10 @@ export default class Pdf extends React.Component {
         console.log(this.state.caseNo);
     }
 
+    toHome() {
+        this.props.navigation.navigate("Investigator", {ip:this.state.ip, id:this.state.id, name: this.state.name});
+    }
+
     createPDF() {
         var self = this;
         var caseNo = this.state.caseNo;
@@ -65,7 +71,10 @@ export default class Pdf extends React.Component {
             caseNo: caseNo,
         }).then(function (response) {
             console.log(response);
-            RNFetchBlob.fs.createFile(dirs.DownloadDir +'/'+ caseNo + ' - ' + caseName + '.pdf', response.data, 'base64');
+            RNFetchBlob.fs.createFile(dirs.DownloadDir + '/' + caseNo + ' - ' + caseName + '.pdf', response.data, 'base64');
+            self.setState({ modalVisible: false });
+            alert("Finish converting report to PDF. Please wait for it to be verified.");
+            //alert("Converting report to PDF. The report will be saved to", response.path());
         }).catch(function (error) {
             console.log(error.response);
         });
@@ -124,60 +133,68 @@ export default class Pdf extends React.Component {
                         </View>
                     </Modal>
                     <View style={styles.container}>
-                        <Text style={{ color: "darkred" }}>{this.state.ip}</Text>
+                        <View style={styles.box}>
+                            <View style={{ marginBottom: 10, flexDirection: "row", width: "80%", alignItems: "center" }}>
+                                <Text style={styles.text}>Case No : </Text>
+                                <Text style={styles.textt}>{this.state.caseNo}</Text>
+                            </View>
+
+                            <View style={{ marginBottom: 10 }}>
+                                <Text style={styles.text}>Case Name :</Text>
+                                <Text style={styles.textt}>{this.state.caseName}</Text>
+                            </View>
+
+                            <View style={{ marginBottom: 10 }}>
+                                <Text style={styles.text}>Case Description :</Text>
+                                <Text style={styles.textt}>{this.state.caseDetail}</Text>
+                            </View>
+
+                            <View style={{ marginBottom: 10, flexDirection: "row", width: "80%", alignItems: "center" }}>
+                                <Text style={styles.text}>Date : </Text>
+                                <Text style={styles.textt}>{this.state.date}</Text>
+                                <Text style={styles.textt}> | </Text>
+                                <Text style={styles.text}>Time : </Text>
+                                <Text style={styles.textt}>{this.state.time}</Text>
+                            </View>
+
+                            <View style={{ marginBottom: 10 }}>
+                                <Text style={styles.text}>Location :</Text>
+                                <Text style={styles.textt}>Latitude → {this.state.latitude}</Text>
+                                <Text style={styles.textt}>Longitude → {this.state.longitude}</Text>
+                                <Text style={styles.textt}>Address → {this.state.address}</Text>
+                            </View>
+
+                            <View style={{ marginBottom: 10, flexDirection: "row", width: "80%", alignItems: "center" }}>
+                                <Text style={styles.text}>Scene : </Text>
+                                <Text style={styles.textt}>{this.state.scene}</Text>
+                                <Text style={styles.textt}> | </Text>
+                                <Text style={styles.text}>Weather : </Text>
+                                <Text style={styles.textt}>{this.state.weather}</Text>
+                            </View>
+
+                            <View style={{ marginBottom: 10 }}>
+                                <Text style={styles.text}>Victim/s :</Text>
+                                <Text style={styles.textt}>{this.state.victim}</Text>
+                            </View>
+
+                            <View style={{ marginBottom: 10 }}>
+                                <Text style={styles.text}>Person Involve :</Text>
+                                <Text style={styles.textt}>{this.state.involveA}</Text>
+                                <Text style={styles.textt}>{this.state.involveB}</Text>
+                                <Text style={styles.textt}>{this.state.involveC}</Text>
+                                <Text style={styles.textt}>{this.state.involveD}</Text>
+                            </View>
+                        </View>
+
                         <View style={{ marginBottom: 10, flexDirection: "row", width: "80%", alignItems: "center" }}>
-                            <Text style={styles.text}>Case No : </Text>
-                            <Text style={styles.textt}>{this.state.caseNo}</Text>
-                        </View>
-
-                        <View style={{ marginBottom: 10 }}>
-                            <Text style={styles.text}>Case Name :</Text>
-                            <Text style={styles.textt}>{this.state.caseName}</Text>
-                        </View>
-
-                        <View style={{ marginBottom: 10 }}>
-                            <Text style={styles.text}>Case Description :</Text>
-                            <Text style={styles.textt}>{this.state.caseDetail}</Text>
-                        </View>
-
-                        <View style={{ marginBottom: 10, flexDirection: "row", width: "80%", alignItems: "center" }}>
-                            <Text style={styles.text}>Date : </Text>
-                            <Text style={styles.textt}>{this.state.date}</Text>
-                            <Text style={styles.text}>Time : </Text>
-                            <Text style={styles.textt}>{this.state.time}</Text>
-                        </View>
-
-                        <View style={{ marginBottom: 10 }}>
-                            <Text style={styles.text}>Location :</Text>
-                            <Text style={styles.textt}>Latitude → {this.state.latitude}</Text>
-                            <Text style={styles.textt}>Longitude → {this.state.longitude}</Text>
-                            <Text style={styles.textt}>Address → {this.state.address}</Text>
-                        </View>
-
-                        <View style={{ marginBottom: 10, flexDirection: "row", width: "80%", alignItems: "center" }}>
-                            <Text style={styles.text}>Scene : </Text>
-                            <Text style={styles.textt}>{this.state.scene}</Text>
-                            <Text style={styles.text}>Weather : </Text>
-                            <Text style={styles.textt}>{this.state.weather}</Text>
-                        </View>
-
-                        <View style={{ marginBottom: 10 }}>
-                            <Text style={styles.text}>Victim/s :</Text>
-                            <Text style={styles.textt}>{this.state.victim}</Text>
-                        </View>
-
-                        <View style={{ marginBottom: 10 }}>
-                            <Text style={styles.text}>Person Involve :</Text>
-                            <Text style={styles.textt}>{this.state.involveA}</Text>
-                            <Text style={styles.textt}>{this.state.involveB}</Text>
-                            <Text style={styles.textt}>{this.state.involveC}</Text>
-                            <Text style={styles.textt}>{this.state.involveD}</Text>
-                        </View>
-
+                        <TouchableOpacity style={styles.exit} onPress={() => this.toHome()}>
+                            <Text style={{ color: "white" }}>CLOSE</Text>
+                        </TouchableOpacity>
 
                         <TouchableOpacity style={styles.button} onPress={() => this.conform()}>
                             <Text style={{ color: "white" }}>Create PDF</Text>
                         </TouchableOpacity>
+                        </View>
                         <Text>{this.state.filePath}</Text>
                     </View>
                 </ScrollView>
@@ -197,6 +214,16 @@ const styles = StyleSheet.create({
         // justifyContent: 'center',
         marginHorizontal: 20,
     },
+    box: {
+        width: "95%",
+        backgroundColor: "white",
+        borderColor: "black",
+        borderWidth: 2,
+        margin: 10,
+        padding: 10,
+        //marginHorizontal: 20,
+        flex: 1,
+    },
     button: {
         width: "48%",
         height: 50,
@@ -209,6 +236,18 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginTop: 35,
         marginLeft: 85
+    },
+    exit: {
+        width: "40%",
+        backgroundColor: "#9E3737",
+        borderRadius: 7,
+        height: 50,
+        alignItems: "center",
+        justifyContent: "center",
+        padding: 20,
+        marginBottom: 25,
+        marginTop: 35,
+        marginLeft: 10
     },
     OpBoxNO: {
         //padding: 3,
@@ -260,7 +299,7 @@ const styles = StyleSheet.create({
         borderRadius: 3
     },
     text: {
-        fontSize: 18,
+        fontSize: 16,
         fontWeight: "bold",
         alignItems: "flex-start",
         justifyContent: "flex-start",
@@ -268,6 +307,7 @@ const styles = StyleSheet.create({
     textt: {
         fontSize: 16,
         fontWeight: "bold",
-        color: "blue",
+        color: "#0048D8",
+        marginRight: 22
     },
 });

@@ -34,11 +34,12 @@ export default class EvidenceForm extends React.Component {
         modalVisible: false,
         modalVisibility: false,
         //temporaryId: "",
-        ip: this.props.route.params.ip,
+        // ip: this.props.route.params.ip,
         // data: [],
-        caseNo: this.props.route.params.caseNo,
-        caseName: this.props.route.params.caseName,
+        caseNo: "",
+        caseName: "",
         image: [],
+        ip: "http://192.168.0.197:8000"
     }
     // amek data from database
     // componentDidMount() {
@@ -56,8 +57,8 @@ export default class EvidenceForm extends React.Component {
         console.log("Button pressed!");
         // this.props.navigation.navigate("Pdf", {ip:this.state.ip});
         axios.post(this.state.ip + '/api/EvidenceForm', {
-            caseNo: this.state.caseNo,
-            caseName: this.state.caseName,
+            caseNo: "caseNo",
+            caseName: "caseName",
             caseDetail: this.state.caseDetail,
             date: this.state.date,
             time: this.state.time,
@@ -245,8 +246,8 @@ export default class EvidenceForm extends React.Component {
 
                 <View style={styles.container} >
 
-                    <View style={{ marginBottom: 10, flexDirection: "row", width: "80%", alignItems: "center" }}>
-                        {/* Row for case no */}
+                    {/* <View style={{ marginBottom: 10, flexDirection: "row", width: "80%", alignItems: "center" }}>
+                        Row for case no
                         <Text style={styles.text}>Case No : </Text>
                         <Text style={styles.textt}>{this.state.caseNo}</Text>
                     </View>
@@ -254,7 +255,7 @@ export default class EvidenceForm extends React.Component {
                     <View style={{ marginBottom: 10 }}>
                         <Text style={styles.text}>Case Name :</Text>
                         <Text style={styles.textt}>{this.state.caseName}</Text>
-                    </View>
+                    </View> */}
 
                     {/* Kotak place evidence */}
                     <View style={{ alignItems: "center" }}>

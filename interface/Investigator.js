@@ -39,6 +39,8 @@ async function locationPermission (){
 export default class Investigator extends React.Component {
     state = {
         ip: this.props.route.params.ip,
+        id: this.props.route.params.id,
+        name: this.props.route.params.name,
     }
     toExist() {
         console.log("Button pressed!");
@@ -46,7 +48,7 @@ export default class Investigator extends React.Component {
     }
     toNewCase() {
         console.log("Button pressed!");
-        this.props.navigation.navigate("NewForm", {ip:this.state.ip});
+        this.props.navigation.navigate("NewForm", {ip:this.state.ip, id:this.state.id, name: this.state.name});
     }
     toExit = () => {
         BackHandler.exitApp();

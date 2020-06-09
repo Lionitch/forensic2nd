@@ -46,6 +46,8 @@ export default class NewForm extends React.Component {
         longitude: "",
         address: "",
         victim: "",
+        id: this.props.route.params.id,
+        name: this.props.route.params.name,
     }
 
     anyfunction() {
@@ -135,6 +137,8 @@ export default class NewForm extends React.Component {
             involveB: this.state.involveB,
             involveC: this.state.involveC,
             involveD: this.state.involveD,
+            id: this.state.id,
+            name: this.state.name,
         })
             .then(function (response) {
                 if (response.data == "Success") {
@@ -145,7 +149,7 @@ export default class NewForm extends React.Component {
                         latitude: self.state.latitude, longitude: self.state.longitude, address: self.state.address,
                         scene: self.state.scene, weather: self.state.weather,
                         victim: self.state.victim, involveA: self.state.involveA, involveB: self.state.involveB,
-                        involveC: self.state.involveC, involveD: self.state.involveD,
+                        involveC: self.state.involveC, involveD: self.state.involveD, id: self.state.id, name: self.state.name
                     });
                 }
                 else {
