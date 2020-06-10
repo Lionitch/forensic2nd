@@ -41,6 +41,7 @@ export default class Pdf extends React.Component {
         involveD: this.props.route.params.involveD,
         id: this.props.route.params.id,
         name: this.props.route.params.name,
+        pdf: this.props.route.params.pdf,
         modalVisible: false,
         // ip: "http://192.168.0.197:8000"
     }
@@ -196,6 +197,7 @@ export default class Pdf extends React.Component {
                         </TouchableOpacity>
                         </View>
                         <Text>{this.state.filePath}</Text>
+                        <SafeAreaView style={{ marginBottom: 100 }} />
                     </View>
                 </ScrollView>
             </ImageBackground>
