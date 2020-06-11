@@ -23,10 +23,13 @@ export default class Verifying extends React.Component {
     state = {
         ip: this.props.route.params.ip,
         user: [],
+        pdf: [],
         // for the whole screen turns transparent
-        modalVisible: false, 
+        modalVisible: false,
         temporaryId: "",
         modalVisibility: false,
+        Visible: false,
+        Visibility: false,
     }
 
     refreshSc() {
@@ -39,8 +42,23 @@ export default class Verifying extends React.Component {
                 console.log(error);
             });
     }
+    refresh() {
+        var self = this;
+        axios.get(this.state.ip + '/api/verifyingPdf')
+            .then(function (response) {
+                console.log(response);
+                self.setState({ pdf: response.data });
+            }).catch(function (error) {
+                console.log(error);
+            });
+    }
 
     componentDidMount() {
+        this.callUser();
+        this.callReport();
+        
+    }
+    callUser(){
         var self = this;
         axios.get(this.state.ip + '/api/verifying')
             .then(function (response) {
@@ -49,10 +67,16 @@ export default class Verifying extends React.Component {
             }).catch(function (error) {
                 console.log(error);
             });
-        // var self = this;
-        // this.onFocus = this.props.navigation.addListener('focus', () => {
-        //     self.refreshSc();
-        // });
+    }
+    callReport(){
+        var self = this;
+        axios.get(this.state.ip + '/api/verifyingPdf')
+            .then(function (response) {
+                console.log(response);
+                self.setState({ pdf: response.data });
+            }).catch(function (error) {
+                console.log(error);
+            });
     }
 
     // componentWillUnmount() {
@@ -65,123 +89,255 @@ export default class Verifying extends React.Component {
         axios.post(this.state.ip + '/api/approve', { id: userid })
             .then(function (response) {
                 //self.forceUpdate();
-                self.setState({modalVisibility: false});
+                self.setState({ modalVisibility: false });
                 alert("This account has been approved.");
                 self.refreshSc();
             })
             .catch(function (error) { console.log(error); })
     }
 
-    conformation(x) {
-        this.setState({modalVisible: true});
-        this.setState({temporaryId: x});
-    }
-
-    conform(x) {
-        this.setState({modalVisibility: true});
-        this.setState({temporaryId: x});
-    }
-
-    noButt() {
-        this.setState({modalVisible: false});
-        this.setState({temporaryId: ""});
-        this.setState({modalVisibility: false});
+    approvePdf(caseNo) {
+        var self = this;
+        var caseNo = this.state.temp;
+        console.log(this.state.temp);
+        axios.post(this.state.ip + '/api/approvePdf', { caseNo: caseNo })
+            .then(function (response) {
+                //self.forceUpdate();
+                self.setState({ Visibility: false });
+                alert("This report has been approved.");
+                self.refresh();
+            })
+            .catch(function (error) { console.log(error); })
     }
 
     deny() {
         var self = this;
         var userid = this.state.temporaryId;
         axios.post(this.state.ip + '/api/deny', { id: userid })
-            .then(function (response) { self.setState({modalVisible: false}); alert("This account has been deleted."); self.refreshSc(); })
+            .then(function (response) { self.setState({ modalVisible: false }); alert("This account has been deleted."); self.refreshSc(); })
             .catch(function (error) { console.log(error); })
+    }
+
+    denyPdf() {
+        var self = this;
+        var id = this.state.temp;
+        axios.post(this.state.ip + '/api/denyPdf', { caseNo: id })
+            .then(function (response) { self.setState({ Visible: false }); alert("This report has been deleted."); self.refresh(); })
+            .catch(function (error) { console.log(error); })
+    }
+
+    conformation(x) {
+        this.setState({ modalVisible: true });
+        this.setState({ temporaryId: x });
+    }
+
+    conform(x) {
+        this.setState({ modalVisibility: true });
+        this.setState({ temporaryId: x });
+    }
+
+    conformationPdf(y) {
+        this.setState({ Visible: true });
+        this.setState({ temp: y });
+    }
+
+    conformPdf(y) {
+        this.setState({ Visibility: true });
+        this.setState({ temp: y });
+    }
+
+    noButt() {
+        this.setState({ modalVisible: false });
+        this.setState({ temporaryId: "" });
+        this.setState({ temp: "" });
+        this.setState({ modalVisibility: false });
+        this.setState({ Visible: false });
+        this.setState({ Visibility: false });
+    }
+    
+    seePdf() {
+        var self = this;
+        var id = this.state.temp;
+        axios.post(this.state.ip + '/api/seePdf', { caseNo: id })
+            .then(function (response) { 
+                alert("Seeing Report.");  
+                console.log(response);
+            })
+            .catch(function (error) { 
+                console.log(error); 
+            })
     }
 
     render() {
         return (
             <ImageBackground source={require('../image/background2.png')} style={styles.backgroundImage}>
                 <ScrollView>
-                {/* <ScrollView contentContainerStyle={{ flex: 1, justifyContent: 'center' }}> */}
-                {/* Nak buat alert box for deny use Modal*/}
-                <Modal 
-                animationType="fade" 
-                transparent={true}
-                visible={this.state.modalVisible} 
-                >
-                    <View style={styles.alertB}>
-                        <View style={styles.alertW}>
-                            <Text style={{ fontWeight: "700", fontSize: 20, marginBottom: 5}}>Alert</Text>
-                            <Text style={{fontSize: 16}}>Are you sure you want to delete this account?</Text>
-                            <View style={{ flexDirection: "row", justifyContent: "space-evenly"}}>
-                                <TouchableOpacity style={styles.OpBoxNO} onPress={()=>this.noButt()}>
-                                    <Text style={styles.alertOp}>NO</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.OpBoxYes} onPress={()=>this.deny()}>
-                                    <Text style={styles.alertOpY}>YES</Text>
-                                </TouchableOpacity>
+                    {/* <ScrollView contentContainerStyle={{ flex: 1, justifyContent: 'center' }}> */}
+                    {/* Nak buat alert box for deny use Modal*/}
+                    <Modal
+                        animationType="fade"
+                        transparent={true}
+                        visible={this.state.modalVisible}
+                    >
+                        <View style={styles.alertB}>
+                            <View style={styles.alertW}>
+                                <Text style={{ fontWeight: "700", fontSize: 20, marginBottom: 5 }}>Alert</Text>
+                                <Text style={{ fontSize: 16 }}>Are you sure you want to delete this account?</Text>
+                                <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+                                    <TouchableOpacity style={styles.OpBoxNO} onPress={() => this.noButt()}>
+                                        <Text style={styles.alertOp}>NO</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.OpBoxYes} onPress={() => this.deny()}>
+                                        <Text style={styles.alertOpY}>YES</Text>
+                                    </TouchableOpacity>
+                                </View>
                             </View>
                         </View>
+                    </Modal>
+
+                    {/* Nak buat alert box for approve*/}
+                    <Modal
+                        animationType="fade"
+                        transparent={true}
+                        visible={this.state.modalVisibility}
+                    >
+                        <View style={styles.alertB}>
+                            <View style={styles.alertW}>
+                                <Text style={{ fontWeight: "700", fontSize: 20, marginBottom: 5 }}>Alert</Text>
+                                <Text style={{ fontSize: 16 }}>Are you sure you want to approve this account?</Text>
+                                <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+                                    <TouchableOpacity style={styles.OpBoxNO} onPress={() => this.noButt()}>
+                                        <Text style={styles.alertOp}>NO</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.OpBoxYes} onPress={() => this.approve()}>
+                                        <Text style={styles.alertOpY}>YES</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
+
+                    {/* Nak buat alert box for deny PDF*/}
+                    <Modal
+                        animationType="fade"
+                        transparent={true}
+                        visible={this.state.Visible}
+                    >
+                        <View style={styles.alertB}>
+                            <View style={styles.alertW}>
+                                <Text style={{ fontWeight: "700", fontSize: 20, marginBottom: 5 }}>Alert</Text>
+                                <Text style={{ fontSize: 16 }}>Are you sure you want to delete this report?</Text>
+                                <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+                                    <TouchableOpacity style={styles.OpBoxNO} onPress={() => this.noButt()}>
+                                        <Text style={styles.alertOp}>NO</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.OpBoxYes} onPress={() => this.denyPdf()}>
+                                        <Text style={styles.alertOpY}>YES</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
+
+                    {/* Nak buat alert box for approve PDF*/}
+                    <Modal
+                        animationType="fade"
+                        transparent={true}
+                        visible={this.state.Visibility}
+                    >
+                        <View style={styles.alertB}>
+                            <View style={styles.alertW}>
+                                <Text style={{ fontWeight: "700", fontSize: 20, marginBottom: 5 }}>Alert</Text>
+                                <Text style={{ fontSize: 16 }}>Are you sure you want to approve this report?</Text>
+                                <View style={{ flexDirection: "row", justifyContent: "space-evenly" }}>
+                                    <TouchableOpacity style={styles.OpBoxNO} onPress={() => this.noButt()}>
+                                        <Text style={styles.alertOp}>NO</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.OpBoxYes} onPress={() => this.approvePdf()}>
+                                        <Text style={styles.alertOpY}>YES</Text>
+                                    </TouchableOpacity>
+                                </View>
+                            </View>
+                        </View>
+                    </Modal>
+
+                    <View style={{ alignItems: "center" }}>
+                        {/* {this.state.user.map((item) => (<Text key={item.id}>{item.name}</Text>))} */}
+
+                        {this.state.user.map((item, i) => (
+                            <View style={styles.box} key={i}>
+                                <View style={{ flexDirection: "row" }}>
+                                    <Text style={styles.textt}>Official ID:</Text>
+                                    <Text style={styles.texttt}>{item.id}</Text>
+                                </View>
+
+                                <View style={{ flexDirection: "row" }}>
+                                    <Text style={styles.textt}>Name:</Text>
+                                    <Text style={styles.texttt}>{item.name}</Text>
+                                </View>
+
+                                <View style={{ flexDirection: "row" }}>
+                                    <Text style={styles.textt}>Email:</Text>
+                                    <Text style={styles.texttt}>{item.email}</Text>
+                                </View>
+
+                                <View style={{ flexDirection: "row" }}>
+                                    <TouchableOpacity style={styles.yes} onPress={() => this.conform(item.id)}>
+                                        <Text style={styles.yesTx}> ✓</Text>
+                                        <Text style={styles.subtle}>Approve</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.no} onPress={() => this.conformation(item.id)}>
+                                        <Text style={styles.noTx}>  ✕</Text>
+                                        <Text style={styles.subtle}>Deny</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                            </View>
+                        ))}
+
+                        {this.state.pdf.map((item, i) => (
+                            <View style={styles.box} key={i}>
+                                <View>
+                                    <TouchableOpacity onPress={() => this.seePdf()}>
+                                        <Image source={require('../image/pdf.png')} style={styles.imagePdf}></Image>
+                                        <Text style={{ fontSize: 8 }}>Click image to see report</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+                                <View style={{ flexDirection: "row" }}>
+                                    <Text style={styles.textt}>Case No:</Text>
+                                    <Text style={styles.texttt}>{item.caseNo}</Text>
+                                </View>
+
+                                <View style={{ justifyContent: "center", alignItems: "center" }}>
+                                    <Text style={{ color: "black", fontWeight: "bold", fontSize: 20, alignItems: "center" }}>
+                                        Case Name:</Text>
+                                    <Text style={{ color: "blue", fontSize: 20, alignItems: "center" }}>{item.caseName}</Text>
+                                </View>
+
+                                <View style={{ justifyContent: "center", alignItems: "center" }}>
+                                    <Text style={{ color: "black", fontWeight: "bold", fontSize: 20, alignItems: "center" }}>Made by:</Text>
+                                    <Text style={{ color: "blue", fontSize: 20, alignItems: "center" }}>{item.name}</Text>
+                                </View>
+
+                                <View style={{ flexDirection: "row" }}>
+                                    <TouchableOpacity style={styles.yes} onPress={() => this.conformPdf(item.caseNo)}>
+                                        <Text style={styles.yesTx}> ✓</Text>
+                                        <Text style={styles.subtle}>Approve</Text>
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.no} onPress={() => this.conformationPdf(item.caseNo)}>
+                                        <Text style={styles.noTx}>  ✕</Text>
+                                        <Text style={styles.subtle}>Deny</Text>
+                                    </TouchableOpacity>
+                                </View>
+
+
+                            </View>
+                        ))}
+
+                        <SafeAreaView style={{ marginBottom: 120 }} />
+
                     </View>
-                </Modal>
-                
-                {/* Nak buat alert box for approve*/}
-                <Modal 
-                animationType="fade" 
-                transparent={true}
-                visible={this.state.modalVisibility} 
-                >
-                    <View style={styles.alertB}>
-                        <View style={styles.alertW}>
-                            <Text style={{ fontWeight: "700", fontSize: 20, marginBottom: 5}}>Alert</Text>
-                            <Text style={{fontSize: 16}}>Are you sure you want to approve this account?</Text>
-                            <View style={{ flexDirection: "row", justifyContent: "space-evenly"}}>
-                                <TouchableOpacity style={styles.OpBoxNO} onPress={()=>this.noButt()}>
-                                    <Text style={styles.alertOp}>NO</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.OpBoxYes} onPress={()=>this.approve()}>
-                                    <Text style={styles.alertOpY}>YES</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
-                
-                <View style={{ alignItems: "center" }}>
-                    {/* {this.state.user.map((item) => (<Text key={item.id}>{item.name}</Text>))} */}
-
-                    {this.state.user.map((item, i) => (
-                        <View style={styles.box} key={i}>
-                            <View style={{ flexDirection: "row" }}>
-                                <Text style={styles.textt}>Official ID:</Text>
-                                <Text style={styles.texttt}>{item.id}</Text>
-                            </View>
-
-                            <View style={{ flexDirection: "row" }}>
-                                <Text style={styles.textt}>Name:</Text>
-                                <Text style={styles.texttt}>{item.name}</Text>
-                            </View>
-
-                            <View style={{ flexDirection: "row" }}>
-                                <Text style={styles.textt}>Email:</Text>
-                                <Text style={styles.texttt}>{item.email}</Text>
-                            </View>
-
-                            <View style={{ flexDirection: "row" }}>
-                                <TouchableOpacity style={styles.yes} onPress={() => this.conform(item.id)}>
-                                    <Text style={styles.yesTx}> ✓</Text>
-                                    <Text style={styles.subtle}>Approve</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.no} onPress={() => this.conformation(item.id)}>
-                                    <Text style={styles.noTx}>  ✕</Text>
-                                    <Text style={styles.subtle}>Deny</Text>
-                                </TouchableOpacity>
-                            </View>
-
-                        </View>
-                    ))}
-
-                    <SafeAreaView style={{marginBottom: 120}}/>
-
-                </View>
                 </ScrollView>
             </ImageBackground>
         );
@@ -194,6 +350,10 @@ const styles = StyleSheet.create({
     backgroundImage: {
         width: screenWidth,
         height: screenHeight,
+    },
+    imagePdf: {
+        height: 90,
+        width: 90,
     },
     alertB: {
         backgroundColor: "rgba(0,0,0,0.7)",
@@ -222,7 +382,7 @@ const styles = StyleSheet.create({
         color: "white",
         marginHorizontal: 20,
     },
-    OpBoxNO:{
+    OpBoxNO: {
         //padding: 3,
         marginTop: 20,
         width: "30%",
@@ -233,7 +393,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderRadius: 6
     },
-    OpBoxYes:{
+    OpBoxYes: {
         backgroundColor: "#3284FE",
         marginTop: 20,
         width: "30%",

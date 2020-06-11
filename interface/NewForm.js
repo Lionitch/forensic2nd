@@ -49,6 +49,7 @@ export default class NewForm extends React.Component {
         id: this.props.route.params.id,
         name: this.props.route.params.name,
         pdf: "",
+        status: "",
     }
 
     anyfunction() {
@@ -130,7 +131,7 @@ export default class NewForm extends React.Component {
             latitude: this.state.latitude,
             longitude: this.state.longitude,
             //address: this.state.address,
-            address: "No 3, Lorong Keramat Dalam 1, Kampung Datuk Keramat, 54000 Kuala Lumpur, Wilayah Persekutuan Kuala Lumpur",
+            address: "Sungai",
             scene: this.state.scene,
             weather: this.state.weather,
             victim: this.state.victim,
@@ -141,6 +142,7 @@ export default class NewForm extends React.Component {
             id: this.state.id,
             name: this.state.name,
             pdf: "none",
+            status: this.state.status,
         })
             .then(function (response) {
                 if (response.data == "Success") {
@@ -152,7 +154,7 @@ export default class NewForm extends React.Component {
                         scene: self.state.scene, weather: self.state.weather,
                         victim: self.state.victim, involveA: self.state.involveA, involveB: self.state.involveB,
                         involveC: self.state.involveC, involveD: self.state.involveD, id: self.state.id, name: self.state.name,
-                        pdf: self.state.pdf
+                        pdf: self.state.pdf, status: self.state.pdf
                     });
                 }
                 else {
