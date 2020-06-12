@@ -26,7 +26,7 @@ export default class Verifier extends React.Component {
     }
     anyfunction() {
         console.log("Button pressed!");
-        this.props.navigation.navigate("Cases");
+        this.props.navigation.navigate("Cases", {ip:this.state.ip});
     }
     toVerify(){
         console.log("Button pressed!");

@@ -1,4 +1,6 @@
 import axios from 'axios';
+import { Col, Row, Grid } from "react-native-easy-grid";
+
 import React from 'react';
 import {
     SafeAreaView,
@@ -27,6 +29,7 @@ export default class Verifying extends React.Component {
         // for the whole screen turns transparent
         modalVisible: false,
         temporaryId: "",
+        temp:"",
         modalVisibility: false,
         Visible: false,
         Visibility: false,
@@ -297,28 +300,38 @@ export default class Verifying extends React.Component {
 
                         {this.state.pdf.map((item, i) => (
                             <View style={styles.box} key={i}>
-                                <View>
-                                    <TouchableOpacity onPress={() => this.seePdf()}>
-                                        <Image source={require('../image/pdf.png')} style={styles.imagePdf}></Image>
-                                        <Text style={{ fontSize: 8 }}>Click image to see report</Text>
-                                    </TouchableOpacity>
-                                </View>
-
-                                <View style={{ flexDirection: "row" }}>
-                                    <Text style={styles.textt}>Case No:</Text>
-                                    <Text style={styles.texttt}>{item.caseNo}</Text>
-                                </View>
-
-                                <View style={{ justifyContent: "center", alignItems: "center" }}>
-                                    <Text style={{ color: "black", fontWeight: "bold", fontSize: 20, alignItems: "center" }}>
-                                        Case Name:</Text>
-                                    <Text style={{ color: "blue", fontSize: 20, alignItems: "center" }}>{item.caseName}</Text>
-                                </View>
-
-                                <View style={{ justifyContent: "center", alignItems: "center" }}>
-                                    <Text style={{ color: "black", fontWeight: "bold", fontSize: 20, alignItems: "center" }}>Made by:</Text>
-                                    <Text style={{ color: "blue", fontSize: 20, alignItems: "center" }}>{item.name}</Text>
-                                </View>
+                                <Grid>
+                                    <Col style={{ width: "37%" }}>
+                                        <View>
+                                            <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", marginTop: 10 }} onPress={() => this.seePdf()}>
+                                                <Image source={require('../image/pdf.png')} style={styles.imagePdf}></Image>
+                                                <Text style={{ fontSize: 8 }}>Click image to see report</Text>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </Col>
+                                    <Col>
+                                        <Row>
+                                            <View style={{ flexDirection: "row" }}>
+                                                <Text style={{ color: "black", fontWeight: "bold", fontSize: 18, alignItems: "center", marginRight: 7 }}>
+                                                    Case No:</Text>
+                                                <Text style={styles.text}>{item.caseNo}</Text>
+                                            </View>
+                                        </Row>
+                                        <Row>
+                                            <View style={{ justifyContent: "flex-start", alignItems: "flex-start" }}>
+                                                <Text style={{ color: "black", fontWeight: "bold", fontSize: 18, alignItems: "center" }}>
+                                                    Case Name:</Text>
+                                                <Text style={{ color: "#0048D8", fontSize: 18, alignItems: "center" }}>{item.caseName}</Text>
+                                             </View>
+                                        </Row>
+                                        <Row>
+                                            <View style={{ justifyContent: "flex-start", alignItems: "flex-start" }}>
+                                                <Text style={{ color: "black", fontWeight: "bold", fontSize: 18, alignItems: "center" }}>Made by:</Text>
+                                                <Text style={{ color: "#0048D8", fontSize: 18, alignItems: "center"}}>{item.name}</Text>
+                                            </View>
+                                        </Row>
+                                    </Col>
+                                </Grid>
 
                                 <View style={{ flexDirection: "row" }}>
                                     <TouchableOpacity style={styles.yes} onPress={() => this.conformPdf(item.caseNo)}>
@@ -493,8 +506,15 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     texttt: {
-        color: "blue",
+        color: "#0048D8",
         fontSize: 20,
+        marginRight: 15,
+        alignItems: "center",
+
+    },
+    text: {
+        color: "#0048D8",
+        fontSize: 18,
         marginRight: 15,
         alignItems: "center",
 

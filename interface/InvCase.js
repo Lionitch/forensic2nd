@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { Col, Row, Grid } from "react-native-easy-grid";
-// import { SearchBar } from 'react-native-elements';
 
 import React from 'react';
 import {
@@ -21,17 +20,17 @@ import {
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
 
-export default class Cases extends React.Component {
+export default class InvCase extends React.Component {
     state = {
         ip: this.props.route.params.ip,
+        id: this.props.route.params.id,
         pdf: [],
         caseNo:"",
-        // search: "",
     }
 
     componentDidMount() {
         var self = this;
-        axios.get(this.state.ip + '/api/verifiedPdf')
+        axios.get(this.state.ip + '/api/madePdf', {id: this.state.id})
             .then(function (response) {
                 console.log(response);
                 self.setState({ pdf: response.data });
@@ -40,56 +39,26 @@ export default class Cases extends React.Component {
             });
     }
 
-    // updateSearch = search => {
-    //     this.setState({ search });
-    //   };
-
-    search(){
-        var self = this;
-        var caseNo = this.state.caseNo;
-        console.log(this.state.temp);
-        axios.post(this.state.ip + '/api/search', { caseNo: caseNo })
-            .then(function (response) {
-                if (response.data=="Success"){
-                    // console.log(response);
-                    // self.setState({ pdf: response.data });
-                    self.componentDidMount();
-                  }
-                  else if(response.data=="Not Success"){
-                    alert("The report you searched is not exist.")
-                   }
-            })
-            .catch(function (error) { console.log(error); })
-    }
-
     render() {
-        const { search } = this.state;
         return (
             <ImageBackground source={require('../image/background2.png')} style={styles.backgroundImage}>
                 {/* <ScrollView contentContainerStyle={{ flex: 1, justifyContent: 'center' }}> */}
                 <ScrollView>
-                {/* <SearchBar
-                    placeholder="Type Here..."
-                    onChangeText={this.updateSearch}
-                    value={search}
-                /> */}
+
                 <View style={styles.topcontain}>
                     <View style={styles.inputView} >
-                        <TouchableOpacity onPress={() => this.search()}>
-                            <Image source={require('../image/search1.png')} style={styles.searchimage} />
-                        </TouchableOpacity>
+                        <Image source={require('../image/search1.png')} style={styles.searchimage} />
                         <TextInput
-                            onChangeText={text => this.setState({ caseNo: text })}
                             style={styles.inputText}
-                            placeholder="Insert Case Number to search"
+                            placeholder="Insert Case No / Case Name to search"
                             placeholderTextColor="#959297" />
                     </View>
                 </View>
 
                 <View style={{ alignItems: "baseline", marginLeft: 16, marginBottom: 5 }}>
                     <Text style={styles.head}>Results :</Text>
-                     {/* <Text>{this.state.ip}</Text> */}
-                     {this.state.pdf.map((item, i) => (
+                    <Text>{this.state.id}</Text>
+                    {this.state.pdf.map((item, i) => (
                             <View style={styles.box2} key={i}>
                                 <Grid>
                                     <Col style={{ width: "33%" }}>

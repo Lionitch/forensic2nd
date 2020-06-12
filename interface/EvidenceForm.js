@@ -1,7 +1,6 @@
 import axios from 'axios';
 // import ImagePicker from 'react-native-image-crop-picker';
 
-import RadioForm, { RadioButton, RadioButtonInput, RadioButtonLabel } from 'react-native-simple-radio-button';
 import React from 'react';
 import {
     SafeAreaView,
@@ -32,33 +31,38 @@ var radio_props = [
 export default class EvidenceForm extends React.Component {
     state = {
         modalVisible: false,
-        modalVisibility: false,
+        enableScrollViewScroll: true,
         //temporaryId: "",
-        // ip: this.props.route.params.ip,
         // data: [],
-        caseNo: "",
-        caseName: "",
         image: [],
-        ip: "http://192.168.0.197:8000"
+        caseNo: this.props.route.params.caseNo,
+        caseName: this.props.route.params.caseName,
+        caseDetail: this.props.route.params.caseDetail,
+        date: this.props.route.params.date,
+        time: this.props.route.params.time,
+        scene: this.props.route.params.scene,
+        weather: this.props.route.params.weather,
+        involveA: this.props.route.params.involveA,
+        involveB: this.props.route.params.involveB,
+        involveC: this.props.route.params.involveC,
+        involveD: this.props.route.params.involveD,
+        ip: this.props.route.params.ip,
+        latitude: this.props.route.params.latitude,
+        longitude: this.props.route.params.longitude,
+        address: this.props.route.params.address,
+        victim: this.props.route.params.victim,
+        id: this.props.route.params.id,
+        name: this.props.route.params.name,
+        pdf: this.props.route.params.pdf,
+        status: this.props.route.params.status,
+
+        //ip: "http://192.168.0.197:8000"
     }
-    // amek data from database
-    // componentDidMount() {
-    //     var self = this;
-    //     axios.get(this.state.ip + '/api/verifying')
-    //         .then(function (response) {
-    //             console.log(response);
-    //             self.setState({ user: response.data });
-    //         }).catch(function (error) {
-    //             console.log(error);
-    //         });
-    // }
-    toElse(){
-        var self = this;
-        console.log("Button pressed!");
-        // this.props.navigation.navigate("Pdf", {ip:this.state.ip});
-        axios.post(this.state.ip + '/api/EvidenceForm', {
-            caseNo: "caseNo",
-            caseName: "caseName",
+
+    toElse() {
+        this.props.navigation.navigate("Pdf", {
+            caseNo: this.state.caseNo,
+            caseName: this.state.caseName,
             caseDetail: this.state.caseDetail,
             date: this.state.date,
             time: this.state.time,
@@ -72,50 +76,29 @@ export default class EvidenceForm extends React.Component {
             involveB: this.state.involveB,
             involveC: this.state.involveC,
             involveD: this.state.involveD,
-        })
-        .then(function (response){
-            if (response.data == "Success") {
-                self.props.navigation.navigate("EvidenceForm", 
-                {
-                    ip:self.state.ip, caseNo:self.state.caseNo, caseName:self.state.caseName,
-                    caseDetail:self.state.caseDetail, date:self.state.date, time:self.state.time,
-                    latitude: self.state.latitude, longitude: self.state.longitude, address: self.state.address,
-                    scene: self.state.scene, weather: self.state.weather,
-                    victim: self.state.victim, involveA: self.state.involveA, involveB: self.state.involveB,
-                    involveC: self.state.involveC, involveD: self.state.involveD,
-                });
-            }
-            else {
-                console.log(response.data);
-            }
-        })
-        .catch(function (error) {
-            console.log(error);
+            id: this.state.id,
+            name: this.state.name,
+            pdf: this.state.pdf,
+            status: this.state.status,
         });
     }
 
     no() {
         this.setState({ modalVisible: false });
-        this.setState({modalVisibility: false});
-    }
-
-    approve(){
-        // convert report to PDF
     }
 
     pick() {
         this.setState({ modalVisible: true });
     }
 
-    conform() {
-        this.setState({ modalVisibility: true });
-    }
-
     gallery() {
+        var self = this;
         ImagePicker.openPicker({
-            multiple: true
+            multiple: true,
+            includeBase64: true,
         }).then(images => {
             console.log(images);
+            self.picArray(images);
         });
     }
 
@@ -124,7 +107,7 @@ export default class EvidenceForm extends React.Component {
         ImagePicker.openCamera({
             width: 300,
             height: 400,
-            cropping: true,
+            cropping: false,
             includeBase64: true,
         }).then(imaged => {
             console.log(imaged);
@@ -150,6 +133,7 @@ export default class EvidenceForm extends React.Component {
 
     uploadImage() {
         var self = this;
+        var caseNo = this.state.caseNo;
         const uploadData = new FormData();
         this.state.image.map(item => {
             // FormData macam array, tapi bukan array -Daus
@@ -163,6 +147,7 @@ export default class EvidenceForm extends React.Component {
 
         var url2 = this.state.ip + '/api/evidence';
         axios({
+            caseNo: caseNo,
             url: url2,
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -180,17 +165,9 @@ export default class EvidenceForm extends React.Component {
     }
 
     render() {
-        // Dapat Date
-        var date = new Date().getDate(); //Current Date
-        var month = new Date().getMonth() + 1; //Current Month
-        var year = new Date().getFullYear(); //Current Year
-        var tarikh = date + "/" + month + "/" + year;
-
-        // Dapat Masa
-        var masa = new Date().getHours() + ":" + new Date().getMinutes() + ":" + new Date().getSeconds();
         return (
             <ImageBackground source={require('../image/background2.png')} style={styles.backgroundImage}>
-                {/* <ScrollView > */}
+                
                 {/* Nak buat alert box choosing either Gallery / Camera*/}
                 <Modal
                     animationType="fade"
@@ -221,33 +198,11 @@ export default class EvidenceForm extends React.Component {
                         </View>
                     </View>
                 </Modal>
-
-                {/* Nak buat alert box for approve report turn to PDF*/}
-                <Modal 
-                animationType="fade" 
-                transparent={true}
-                visible={this.state.modalVisibility} 
-                >
-                    <View style={styles.alertB}>
-                        <View style={styles.alertW}>
-                            <Text style={{ fontWeight: "700", fontSize: 20, marginBottom: 5}}>Alert</Text>
-                            <Text style={{fontSize: 16}}>Are you sure you want to convert this report to PDF?</Text>
-                            <View style={{ flexDirection: "row", justifyContent: "space-evenly"}}>
-                                <TouchableOpacity style={styles.OpBoxNO} onPress={()=>this.no()}>
-                                    <Text style={styles.alertOp}>NO</Text>
-                                </TouchableOpacity>
-                                <TouchableOpacity style={styles.OpBoxYes} onPress={()=>this.approve()}>
-                                    <Text style={styles.alertOpY}>YES</Text>
-                                </TouchableOpacity>
-                            </View>
-                        </View>
-                    </View>
-                </Modal>
-
-                <View style={styles.container} >
-
-                    {/* <View style={{ marginBottom: 10, flexDirection: "row", width: "80%", alignItems: "center" }}>
-                        Row for case no
+                {/* https://github.com/facebook/react-native/issues/1966 */}
+                <View style={styles.container}  onStartShouldSetResponderCapture={() => {this.setState({ enableScrollViewScroll: true })}}>
+                <ScrollView scrollEnabled={this.state.enableScrollViewScroll}>
+                    <View style={{ marginBottom: 10, flexDirection: "row", width: "80%", alignItems: "center" }}>
+                        {/* Row for case no */}
                         <Text style={styles.text}>Case No : </Text>
                         <Text style={styles.textt}>{this.state.caseNo}</Text>
                     </View>
@@ -255,13 +210,14 @@ export default class EvidenceForm extends React.Component {
                     <View style={{ marginBottom: 10 }}>
                         <Text style={styles.text}>Case Name :</Text>
                         <Text style={styles.textt}>{this.state.caseName}</Text>
-                    </View> */}
+                    </View>
 
                     {/* Kotak place evidence */}
                     <View style={{ alignItems: "center" }}>
 
                         <Text style={styles.text}>Evidence : </Text>
                         <View style={styles.box}>
+                        
                             {/* <ScrollView> */}
 
                             <TouchableOpacity onPress={() => this.pick()}>
@@ -274,10 +230,16 @@ export default class EvidenceForm extends React.Component {
                                 data={this.state.image} //amek dari array
                                 renderItem={this.renderImage} //render design //xguna bracket cause by default send item & index
                                 keyExtractor={index => index.toString()} //[keyExtractor]run array untuk pastikan run dri 0 and xrun balik //memang kene guna toString() if not error
+                                onStartShouldSetResponderCapture={() => {
+                                    this.setState({ enableScrollViewScroll: false })
+                                    if (this.refs.myList.scrollProperties.offset === 0 && this.state.enableScrollViewScroll === false) {
+                                      this.setState({ enableScrollViewScroll: true })
+                                    }
+                                }}
                             />
 
                             {/* </ScrollView> */}
-                            <TouchableOpacity style={styles.Btn2} onPress={() => this.uploadImage()}>
+                            <TouchableOpacity style={styles.Btn} onPress={() => this.uploadImage()}>
                                 <Text style={styles.btnText}>Upload</Text>
                             </TouchableOpacity>
                         </View>
@@ -297,10 +259,10 @@ export default class EvidenceForm extends React.Component {
 
                     <SafeAreaView style={{ marginBottom: 90 }} />
 
-
+                    </ScrollView>
                 </View>
 
-                {/* </ScrollView> */}
+                
             </ImageBackground >
         );
     }
@@ -340,6 +302,16 @@ const styles = StyleSheet.create({
         //borderRadius: 23,
         height: 45,
     },
+    Btn: {
+        width: "48%",
+        backgroundColor: "#008DDC",
+        height: 50,
+        alignItems: "center",
+        borderRadius: 7,
+        justifyContent: "center",
+        marginTop: 35,
+        marginBottom: 15,
+    },
     Btn2: {
         width: "48%",
         backgroundColor: "#3D025A",
@@ -349,7 +321,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginTop: 35,
         marginBottom: 15,
-        marginLeft: 85
+        marginLeft: 165
     },
     btnText: {
         height: 60,
@@ -360,13 +332,13 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     text: {
-        fontSize: 17,
+        fontSize: 18,
         fontWeight: "bold",
     },
     textt: {
-        fontSize: 19,
+        fontSize: 18,
         fontWeight: "bold",
-        color: "blue",
+        color: "#0048D8",
     },
     gallery: {
         //padding: 3,
@@ -422,7 +394,7 @@ const styles = StyleSheet.create({
         //borderWidth: 3,
         borderRadius: 3
     },
-    OpBoxNO:{
+    OpBoxNO: {
         //padding: 3,
         marginTop: 20,
         width: "30%",
@@ -433,7 +405,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         borderRadius: 6
     },
-    OpBoxYes:{
+    OpBoxYes: {
         backgroundColor: "#3284FE",
         marginTop: 20,
         width: "30%",

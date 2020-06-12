@@ -62,10 +62,10 @@ export default class Login extends React.Component {
     console.log("Button pressed!");
     this.props.navigation.navigate("Signup",{ip:this.state.ip});
   }
-  toVer() {
+  toForgot() {
     console.log(this.state.id);
     console.log("Button pressed!");
-    this.props.navigation.navigate("Verifier");
+    this.props.navigation.navigate("ForgotPS",{ip:this.state.ip});
   }
 
   render() {
@@ -102,7 +102,7 @@ export default class Login extends React.Component {
               <Text style={styles.loginText}>LOG IN</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.forgot}>
+            <TouchableOpacity style={styles.forgot} onPress={() => this.toForgot()}>
               <Text style={{color: "#525252"}}>Forgot your password?</Text>
             </TouchableOpacity>
 

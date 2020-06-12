@@ -44,7 +44,7 @@ export default class Investigator extends React.Component {
     }
     toExist() {
         console.log("Button pressed!");
-        this.props.navigation.navigate("Cases");
+        this.props.navigation.navigate("InvCase", {ip:this.state.ip, id:this.state.id});
     }
     toNewCase() {
         console.log("Button pressed!");

@@ -146,7 +146,7 @@ export default class NewForm extends React.Component {
         })
             .then(function (response) {
                 if (response.data == "Success") {
-                    self.props.navigation.navigate("Pdf", 
+                    self.props.navigation.navigate("EvidenceForm", 
                     {
                         ip:self.state.ip, caseNo:self.state.caseNo, caseName:self.state.caseName,
                         caseDetail:self.state.caseDetail, date:self.state.date, time:self.state.time,

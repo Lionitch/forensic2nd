@@ -26,6 +26,7 @@ import {
 
 
 import Loginn from './interface/Login';
+import ForgotPSs from './interface/ForgotPS';
 import Signupp from './interface/SignUp';
 import Investigatorr from './interface/Investigator';
 import Verifierr from './interface/Verifier';
@@ -34,6 +35,7 @@ import NewFormm from './interface/NewForm';
 import EvidenceFormm from './interface/EvidenceForm';
 import Verifyingg from './interface/Verifying';
 import Pdff from './interface/Pdf';
+import InvCases from './interface/InvCase';
 
 const screenHeight = Dimensions.get("window").height;
 const screenWidth = Dimensions.get("window").width;
@@ -47,6 +49,7 @@ export default class App extends React.Component{
           <MainStack.Navigator initialRouteName="Login" headerMode="screen" 
           screenOptions={{headerStyle:{backgroundColor:"#2B0140"}, headerTintColor: 'white', headerTitleStyle: {fontWeight: 'bold',},}}>
             <MainStack.Screen name="Login" component={Loginn} options={{ title: '     Mobile Forensic Application Tool' }}/>
+            <MainStack.Screen name="ForgotPS" component={ForgotPSs} options={{ title: 'Forgot Password' }}/>
             <MainStack.Screen name="Signup" component={Signupp} options={{ title: 'Create New Account' }}/>
             <MainStack.Screen name="Investigator" component={Investigatorr} options={{ title: 'Homepage' }}/>
             <MainStack.Screen name="Verifier" component={Verifierr} options={{ title: 'Homepage' }}/>
@@ -55,6 +58,7 @@ export default class App extends React.Component{
             <MainStack.Screen name="EvidenceForm" component={EvidenceFormm} options={{ title: 'Evidence Form' }}/>
             <MainStack.Screen name="Verifying" component={Verifyingg} options={{ title: 'Verifying Items' }}/>
             <MainStack.Screen name="Pdf" component={Pdff} options={{ title: 'Converting Data to PDF' }}/>
+            <MainStack.Screen name="InvCase" component={InvCases} options={{ title: 'Existing Cases' }}/>
           </MainStack.Navigator>
         </NavigationContainer>
       );
