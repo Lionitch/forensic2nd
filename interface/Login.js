@@ -51,6 +51,9 @@ export default class Login extends React.Component {
      else if (response.data=="Verifier"){
        self.props.navigation.navigate("Verifier",{ip:self.state.ip})
      }
+    //  else if (response.data=="Unauthorized"){
+    //   alert("Unauthorized user.")
+    //  }
      else {alert("Your Official ID or password is incorrect.")}
     })
     .catch(function (error) {

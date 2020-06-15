@@ -14,6 +14,7 @@ import {
     TextInput,
     ImageBackground,
     Dimensions,
+    Linking,
 } from 'react-native';
 
 
@@ -30,13 +31,20 @@ export default class InvCase extends React.Component {
 
     componentDidMount() {
         var self = this;
-        axios.get(this.state.ip + '/api/madePdf', {id: this.state.id})
+        console.log(this.state.id);
+        axios.post(this.state.ip + '/api/madePdf', {id: this.state.id})
             .then(function (response) {
                 console.log(response);
                 self.setState({ pdf: response.data });
             }).catch(function (error) {
                 console.log(error);
             });
+    }
+
+    seePdf(caseNo,caseName) {
+        var self = this;
+        var id = this.state.temp;
+        Linking.openURL(this.state.ip+"/tempReport/"+caseNo+" - "+caseName+".pdf");
     }
 
     render() {
@@ -63,7 +71,7 @@ export default class InvCase extends React.Component {
                                 <Grid>
                                     <Col style={{ width: "33%" }}>
                                         <View>
-                                            <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", marginTop: 10 }} onPress={() => this.seePdf()}>
+                                            <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", marginTop: 10 }} onPress={() => this.seePdf(item.caseNo,item.caseName)}>
                                                 <Image source={require('../image/pdf.png')} style={styles.imagePdf}></Image>
                                                 <Text style={{ fontSize: 8 }}>Click image to see report</Text>
                                             </TouchableOpacity>

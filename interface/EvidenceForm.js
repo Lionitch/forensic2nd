@@ -61,6 +61,7 @@ export default class EvidenceForm extends React.Component {
 
     toElse() {
         this.props.navigation.navigate("Pdf", {
+            ip: this.state.ip,
             caseNo: this.state.caseNo,
             caseName: this.state.caseName,
             caseDetail: this.state.caseDetail,
@@ -105,8 +106,8 @@ export default class EvidenceForm extends React.Component {
     bukakCam() {
         var self = this;
         ImagePicker.openCamera({
-            width: 300,
-            height: 400,
+            width: 1920,
+            height: 1080,
             cropping: false,
             includeBase64: true,
         }).then(imaged => {
@@ -135,6 +136,7 @@ export default class EvidenceForm extends React.Component {
         var self = this;
         var caseNo = this.state.caseNo;
         const uploadData = new FormData();
+        console.log(this.state.caseNo);
         this.state.image.map(item => {
             // FormData macam array, tapi bukan array -Daus
             uploadData.append('image[]', {
@@ -145,9 +147,9 @@ export default class EvidenceForm extends React.Component {
         });
         //console.log(uploadData);
 
-        var url2 = this.state.ip + '/api/evidence';
+        var url2 = this.state.ip + '/api/evidence/' + caseNo;
         axios({
-            caseNo: caseNo,
+            // caseNo: caseNo,
             url: url2,
             headers: {
                 'Content-Type': 'multipart/form-data',
@@ -157,10 +159,10 @@ export default class EvidenceForm extends React.Component {
             data: uploadData,
         })
             .then(function (response) {
-                console.log(response.caseNo);
+                console.log(response);
             })
             .catch(function (error) {
-                console.log(error.response.caseNo);
+                console.log(error.response);
             });
     }
 
@@ -199,8 +201,8 @@ export default class EvidenceForm extends React.Component {
                     </View>
                 </Modal>
                 {/* https://github.com/facebook/react-native/issues/1966 */}
-                <View style={styles.container}  onStartShouldSetResponderCapture={() => {this.setState({ enableScrollViewScroll: true })}}>
-                <ScrollView scrollEnabled={this.state.enableScrollViewScroll}>
+                <View style={styles.container}>
+                {/* <ScrollView scrollEnabled={this.state.enableScrollViewScroll}> */}
                     <View style={{ marginBottom: 10, flexDirection: "row", width: "80%", alignItems: "center" }}>
                         {/* Row for case no */}
                         <Text style={styles.text}>Case No : </Text>
@@ -246,20 +248,20 @@ export default class EvidenceForm extends React.Component {
                         {/* <TouchableOpacity style={styles.Btn2} onPress={() => this.uploadImage()}>
                                     <Text style={styles.btnText}>Upload</Text>
                                 </TouchableOpacity> */}
-
-                    </View>
-
-                    <View >
                         <TouchableOpacity style={styles.Btn2} onPress={() => this.toElse()}>
                             <Text style={styles.btnText}>NEXT</Text>
                         </TouchableOpacity>
                     </View>
 
+                    {/* <View > */}
+                        
+                    {/* </View> */}
+
 
 
                     <SafeAreaView style={{ marginBottom: 90 }} />
 
-                    </ScrollView>
+                    {/* </ScrollView> */}
                 </View>
 
                 
@@ -291,7 +293,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginTop: 9,
         //borderRadius: 25,
-        //height: "86%",
+        height: "72%",
         //marginBottom: 20,
         //padding: 3,
         // flexDirection: "row"
@@ -319,7 +321,7 @@ const styles = StyleSheet.create({
         alignItems: "center",
         borderRadius: 7,
         justifyContent: "center",
-        marginTop: 35,
+        marginTop: 15,
         marginBottom: 15,
         marginLeft: 165
     },

@@ -15,6 +15,7 @@ import {
     ImageBackground,
     Dimensions,
     Modal,
+    Linking,
 } from 'react-native';
 
 
@@ -158,17 +159,18 @@ export default class Verifying extends React.Component {
         this.setState({ Visibility: false });
     }
     
-    seePdf() {
+    seePdf(caseNo,caseName) {
         var self = this;
         var id = this.state.temp;
-        axios.post(this.state.ip + '/api/seePdf', { caseNo: id })
-            .then(function (response) { 
-                alert("Seeing Report.");  
-                console.log(response);
-            })
-            .catch(function (error) { 
-                console.log(error); 
-            })
+        Linking.openURL(this.state.ip+"/tempReport/"+caseNo+" - "+caseName+".pdf");
+        // axios.post(this.state.ip + '/api/seePdf', { caseNo: id })
+        //     .then(function (response) { 
+        //         alert("Seeing Report.");  
+        //         console.log(response);
+        //     })
+        //     .catch(function (error) { 
+        //         console.log(error); 
+        //     })
     }
 
     render() {
@@ -303,7 +305,7 @@ export default class Verifying extends React.Component {
                                 <Grid>
                                     <Col style={{ width: "37%" }}>
                                         <View>
-                                            <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", marginTop: 10 }} onPress={() => this.seePdf()}>
+                                            <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", marginTop: 10 }} onPress={() => this.seePdf(item.caseNo,item.caseName)}>
                                                 <Image source={require('../image/pdf.png')} style={styles.imagePdf}></Image>
                                                 <Text style={{ fontSize: 8 }}>Click image to see report</Text>
                                             </TouchableOpacity>
