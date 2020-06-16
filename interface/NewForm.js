@@ -91,7 +91,7 @@ export default class NewForm extends React.Component {
                             (position) => {
                               console.log(position);
                               self.setState({latitude : position.coords.latitude, longitude: position.coords.longitude});
-                            //   self.callGeo();
+                              self.callGeo();
                             },
                             (error) => {
                               // See error code charts below.
@@ -105,19 +105,19 @@ export default class NewForm extends React.Component {
 
     }
     // CALLGEO BUKAK BILA NAK SHOWCASE
-    // callGeo() {
-    //     var self = this;
-    //     //Geolocation APIs
-    //     var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+this.state.latitude+","+this.state.longitude+"&key=AIzaSyAjdYQTnkVVnOXYbDa-ziuQJXdCeHoGmCw";
-    //     axios.get(url)
-    //         .then(function (response) {
-    //             console.log(response);
-    //             console.log(response.data.results[0].formatted_address);
-    //             self.setState({address: response.data.results[0].formatted_address});
-    //         }).catch(function (error) {
-    //             console.log(error);
-    //         });
-    // }
+    callGeo() {
+        var self = this;
+        //Geolocation APIs
+        var url = "https://maps.googleapis.com/maps/api/geocode/json?latlng="+this.state.latitude+","+this.state.longitude+"&key=AIzaSyAjdYQTnkVVnOXYbDa-ziuQJXdCeHoGmCw";
+        axios.get(url)
+            .then(function (response) {
+                console.log(response);
+                console.log(response.data.results[0].formatted_address);
+                self.setState({address: response.data.results[0].formatted_address});
+            }).catch(function (error) {
+                console.log(error);
+            });
+    }
 
     next() {
         var self = this;
@@ -130,8 +130,8 @@ export default class NewForm extends React.Component {
             time: this.state.time,
             latitude: this.state.latitude,
             longitude: this.state.longitude,
-            //address: this.state.address,
-            address: "No. 56, Jalan U3/F,, Taman Subang Perdana, Seksyen U3",
+            address: this.state.address,
+            // address: "No. 56, Jalan U3/F,, Taman Subang Perdana, Seksyen U3",
             scene: this.state.scene,
             weather: this.state.weather,
             victim: this.state.victim,
@@ -222,7 +222,7 @@ export default class NewForm extends React.Component {
                         <Text style={styles.text}>Location :</Text>
                         <Text style={{color: "#2C3CB8", fontSize: 16}}>Latitude → {this.state.latitude}</Text>
                         <Text style={{color: "#2C3CB8", fontSize: 16}}>Longitude → {this.state.longitude}</Text>
-                        {/* <Text style={{color: "#2C3CB8", fontSize: 16}}>Address → {this.state.address}</Text> */}
+                        <Text style={{color: "#2C3CB8", fontSize: 16}}>Address → {this.state.address}</Text>
 
 
                         <Text style={styles.textt}>Scene :</Text>
