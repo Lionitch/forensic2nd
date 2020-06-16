@@ -97,9 +97,12 @@ export default class EvidenceForm extends React.Component {
         ImagePicker.openPicker({
             multiple: true,
             includeBase64: true,
-        }).then(images => {
+        }).then(images => { 
             console.log(images);
-            self.picArray(images);
+            images.map(item => {
+                self.picArray(item);
+            });
+            
         });
     }
 
@@ -160,6 +163,8 @@ export default class EvidenceForm extends React.Component {
         })
             .then(function (response) {
                 console.log(response);
+                alert("Finish uploading evidence.");
+
             })
             .catch(function (error) {
                 console.log(error.response);
