@@ -32,35 +32,13 @@ export default class Cases extends React.Component {
 
     componentDidMount() {
         var self = this;
-        axios.get(this.state.ip + '/api/verifiedPdf')
+        axios.post(this.state.ip + '/api/search', {caseNo: this.state.caseNo})
             .then(function (response) {
                 console.log(response);
                 self.setState({ pdf: response.data });
             }).catch(function (error) {
                 console.log(error);
             });
-    }
-
-    // updateSearch = search => {
-    //     this.setState({ search });
-    //   };
-
-    search(){
-        var self = this;
-        var caseNo = this.state.caseNo;
-        console.log(this.state.temp);
-        axios.post(this.state.ip + '/api/search', { caseNo: caseNo })
-            .then(function (response) {
-                if (response.data=="Success"){
-                    // console.log(response);
-                    // self.setState({ pdf: response.data });
-                    self.componentDidMount();
-                  }
-                  else if(response.data=="Not Success"){
-                    alert("The report you searched is not exist.")
-                   }
-            })
-            .catch(function (error) { console.log(error); })
     }
 
     seePdf(caseNo,caseName) {
@@ -73,7 +51,6 @@ export default class Cases extends React.Component {
         const { search } = this.state;
         return (
             <ImageBackground source={require('../image/background2.png')} style={styles.backgroundImage}>
-                {/* <ScrollView contentContainerStyle={{ flex: 1, justifyContent: 'center' }}> */}
                 <ScrollView>
                 {/* <SearchBar
                     placeholder="Type Here..."
@@ -82,14 +59,14 @@ export default class Cases extends React.Component {
                 /> */}
                 <View style={styles.topcontain}>
                     <View style={styles.inputView} >
-                        <TouchableOpacity onPress={() => this.search()}>
-                            <Image source={require('../image/search1.png')} style={styles.searchimage} />
-                        </TouchableOpacity>
                         <TextInput
                             onChangeText={text => this.setState({ caseNo: text })}
                             style={styles.inputText}
                             placeholder="Insert Case Number to search"
                             placeholderTextColor="#959297" />
+                        <TouchableOpacity onPress={() => this.componentDidMount()} style={styles.buttoneSearch}>
+                            <Image source={require('../image/search1.png')} style={styles.searchimage} />
+                        </TouchableOpacity>
                     </View>
                 </View>
 
@@ -101,7 +78,7 @@ export default class Cases extends React.Component {
                                 <Grid>
                                     <Col style={{ width: "33%" }}>
                                         <View>
-                                            <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", marginTop: 10 }} onPress={() => this.seePdf(item.caseNo,item.caseName)}>
+                                            <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", marginTop: 4 }} onPress={() => this.seePdf(item.caseNo,item.caseName)}>
                                                 <Image source={require('../image/pdf.png')} style={styles.imagePdf}></Image>
                                                 <Text style={{ fontSize: 8 }}>Click image to see report</Text>
                                             </TouchableOpacity>
@@ -134,6 +111,7 @@ export default class Cases extends React.Component {
 
                             </View>
                         ))}
+                        <SafeAreaView style={{ marginBottom: 120 }} />
                 </View>
 
                 </ScrollView>
@@ -195,8 +173,14 @@ const styles = StyleSheet.create({
         width: 25,
         height: 25,
         marginRight: 8,
-        marginTop: 6,
-        marginLeft: 3
+        marginTop: 2,
+        marginLeft: 13
+    },
+    buttoneSearch: {
+        backgroundColor: "#9AD8FA", 
+        justifyContent: "center", 
+        alignItems:"center",
+        width: 68
     },
     head: {
         fontWeight: "bold",

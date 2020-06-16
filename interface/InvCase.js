@@ -32,7 +32,7 @@ export default class InvCase extends React.Component {
     componentDidMount() {
         var self = this;
         console.log(this.state.id);
-        axios.post(this.state.ip + '/api/madePdf', {id: this.state.id})
+        axios.post(this.state.ip + '/api/report', {caseNo: this.state.caseNo, id: this.state.id})
             .then(function (response) {
                 console.log(response);
                 self.setState({ pdf: response.data });
@@ -55,23 +55,26 @@ export default class InvCase extends React.Component {
 
                 <View style={styles.topcontain}>
                     <View style={styles.inputView} >
-                        <Image source={require('../image/search1.png')} style={styles.searchimage} />
-                        <TextInput
+                    <TextInput
+                            onChangeText={text => this.setState({ caseNo: text })}
                             style={styles.inputText}
-                            placeholder="Insert Case No / Case Name to search"
+                            placeholder="Insert Case Number to search"
                             placeholderTextColor="#959297" />
+                        <TouchableOpacity onPress={() => this.componentDidMount()} style={styles.buttoneSearch}>
+                            <Image source={require('../image/search1.png')} style={styles.searchimage} />
+                        </TouchableOpacity>
                     </View>
                 </View>
 
                 <View style={{ alignItems: "baseline", marginLeft: 16, marginBottom: 5 }}>
                     <Text style={styles.head}>Results :</Text>
-                    <Text>{this.state.id}</Text>
+                    {/* <Text>{this.state.id}</Text> */}
                     {this.state.pdf.map((item, i) => (
                             <View style={styles.box2} key={i}>
                                 <Grid>
                                     <Col style={{ width: "33%" }}>
                                         <View>
-                                            <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", marginTop: 10 }} onPress={() => this.seePdf(item.caseNo,item.caseName)}>
+                                            <TouchableOpacity style={{ justifyContent: "center", alignItems: "center", marginTop: 4 }} onPress={() => this.seePdf(item.caseNo,item.caseName)}>
                                                 <Image source={require('../image/pdf.png')} style={styles.imagePdf}></Image>
                                                 <Text style={{ fontSize: 8 }}>Click image to see report</Text>
                                             </TouchableOpacity>
@@ -104,6 +107,7 @@ export default class InvCase extends React.Component {
 
                             </View>
                         ))}
+                        <SafeAreaView style={{ marginBottom: 120 }} />
                 </View>
 
                 </ScrollView>
@@ -165,8 +169,14 @@ const styles = StyleSheet.create({
         width: 25,
         height: 25,
         marginRight: 8,
-        marginTop: 6,
-        marginLeft: 3
+        marginTop: 2,
+        marginLeft: 13
+    },
+    buttoneSearch: {
+        backgroundColor: "#9AD8FA", 
+        justifyContent: "center", 
+        alignItems:"center",
+        width: 68
     },
     head: {
         fontWeight: "bold",

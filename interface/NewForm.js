@@ -131,7 +131,7 @@ export default class NewForm extends React.Component {
             latitude: this.state.latitude,
             longitude: this.state.longitude,
             //address: this.state.address,
-            address: "Sungai",
+            address: "No. 56, Jalan U3/F,, Taman Subang Perdana, Seksyen U3",
             scene: this.state.scene,
             weather: this.state.weather,
             victim: this.state.victim,
